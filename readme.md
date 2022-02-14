@@ -408,7 +408,7 @@ Disclaimer:
             {/* Create new section to hold ThirdComponent or FourthComponent */}
             <section>
               <nav>
-                {/* Delclare the link in here (href) */}
+                {/* Declare the link in here (href) */}
                 {/* navigate -1 to go back 1 page before */}
                 {/* navigate / to go to / (or using link) */}
                 <a href="#" className="link" onClick={() => navigate("/")}>
