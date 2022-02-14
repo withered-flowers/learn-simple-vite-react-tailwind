@@ -342,3 +342,90 @@ Disclaimer:
           <ThirdComponent />
         </section>
     ```
+
+## Pre-FourthComponent (Router)
+1. `pnpm add react-router-dom@6`
+1. edit `index.css`
+    ```css   
+    .link {
+      @apply underline text-sky-600 hover:text-green-600 m-2;
+    }
+    ```
+1. edit `main.jsx`
+    ```jsx
+    import React from "react";
+    import ReactDOM from "react-dom";
+    // import BrowserRouter
+    import { BrowserRouter } from "react-router-dom";
+    import "./index.css";
+    import App from "./App";
+    // import routes and route to declare the main routes
+    import { Route, Routes } from "react-router-dom";
+
+    ReactDOM.render(
+      <React.StrictMode>
+        {/* Add BrowserRouter here */}
+        <BrowserRouter>
+          {/* Add Routes for declaring routes for react-router */}
+          <Routes>
+            {/* Add Route for declaring * route which refer to App */}
+            <Route path="*" element={<App />} />
+          </Routes>
+        </BrowserRouter>
+      </React.StrictMode>,
+      document.getElementById("root")
+    );
+    ```
+1. edit `App.jsx`
+    ```jsx
+    import { Routes, Route, Link } from "react-router-dom";
+    // This is for using history from browser
+    // v5 react-router hooks is named useHistory
+    // v6 react-router hooks is named useNavigate
+    import { useNavigate } from "react-router-dom";
+    import FirstComponent from "./components/FirstComponent";
+    import SecondComponent from "./components/SecondComponent";
+    import ThirdComponent from "./components/ThirdComponent";
+
+    function App() {
+      // declare hooks to use the navigate
+      const navigate = useNavigate();
+
+      return (
+        <div className="App">
+          <div className="custom-container bg-slate-200">
+            <header className="App-header">
+              <p className="h1">Simple React Apps with Tailwind</p>
+            </header>
+            {/* Create new section to hold FirstComponent */}
+            <section>
+              <FirstComponent />
+            </section>
+            {/* Create new section to hold SecondComponent */}
+            <section>
+              <SecondComponent />
+            </section>
+            {/* Create new section to hold ThirdComponent or FourthComponent */}
+            <section>
+              <nav>
+                {/* Delclare the link in here (href) */}
+                {/* navigate -1 to go back 1 page before */}
+                <a href="#" className="link" onClick={() => navigate(-1)}>
+                  Back
+                </a>
+                <Link to="/third-component" className="link">
+                  Third Component
+                </Link>
+              </nav>
+              {/* Declare the routes here */}
+              <Routes>
+                <Route path="/third-component" element={<ThirdComponent />} />
+              </Routes>
+            </section>
+          </div>
+        </div>
+      );
+    }
+
+    export default App;
+    ```
