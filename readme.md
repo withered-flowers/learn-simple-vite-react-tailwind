@@ -410,7 +410,8 @@ Disclaimer:
               <nav>
                 {/* Delclare the link in here (href) */}
                 {/* navigate -1 to go back 1 page before */}
-                <a href="#" className="link" onClick={() => navigate(-1)}>
+                {/* navigate / to go to / (or using link) */}
+                <a href="#" className="link" onClick={() => navigate("/")}>
                   Back
                 </a>
                 <Link to="/third-component" className="link">
@@ -428,4 +429,208 @@ Disclaimer:
     }
 
     export default App;
+    ```
+
+## FourthComponent
+1. create file `src/components/FourthComponent.jsx`
+1. create file `src/components/FourthComponentSubTable.jsx`
+1. create file `src/components/FourthComponentSubTableContent.jsx`
+1. create file `src/components/FourthComponentSubInput.jsx`
+1. edit `App.jsx` to import `FourthComponent.jsx` and adding route to `/fourth-component`
+    ```jsx
+    import { Routes, Route, Link } from "react-router-dom";
+    // This is for using history from browser
+    // v5 react-router hooks is named useHistory
+    // v6 react-router hooks is named useNavigate
+    import { useNavigate } from "react-router-dom";
+    import FirstComponent from "./components/FirstComponent";
+    import SecondComponent from "./components/SecondComponent";
+    import ThirdComponent from "./components/ThirdComponent";
+    import FourthComponent from "./components/FourthComponent";
+
+    function App() {
+      // declare hooks to use the navigate
+      const navigate = useNavigate();
+
+      return (
+        <div className="App">
+          <div className="custom-container bg-slate-200">
+            <header className="App-header">
+              <p className="h1">Simple React Apps with Tailwind</p>
+            </header>
+            {/* Create new section to hold FirstComponent */}
+            <section>
+              <FirstComponent />
+            </section>
+            {/* Create new section to hold SecondComponent */}
+            <section>
+              <SecondComponent />
+            </section>
+            {/* Create new section to hold ThirdComponent or FourthComponent */}
+            <section>
+              <nav>
+                {/* Delclare the link in here (href) */}
+                {/* navigate -1 to go back 1 page before */}
+                {/* navigate / to go to / (or using link) */}
+                <a href="#" className="link" onClick={() => navigate("/")}>
+                  Back
+                </a>
+                <Link to="/third-component" className="link">
+                  Third Component
+                </Link>
+                <Link to="/fourth-component" className="link">
+                  Fourth Component
+                </Link>
+              </nav>
+              {/* Declare the routes here */}
+              <Routes>
+                <Route path="/third-component" element={<ThirdComponent />} />
+                <Route path="/fourth-component" element={<FourthComponent />} />
+              </Routes>
+            </section>
+          </div>
+        </div>
+      );
+    }
+
+    export default App;
+    ```
+1. `edit FourthComponent.jsx`
+    ```jsx
+    import { useState, useEffect } from "react";
+    import FourthComponentSubTable from "./FourthComponentSubTable";
+    import FourthComponentSubInput from "./FourthComponentSubInput";
+
+    function FourthComponent() {
+      // state for fetched external data
+      // initial value is an empty array
+      const [extData, setExtData] = useState([]);
+
+      // state for selected row (we only fetch the email, so initial state will be string)
+      const [selectedExtData, setSelectedExtData] = useState("");
+
+      // declare function to set the selected email
+      const setSelectedEmail = (email) => {
+        setSelectedExtData(email);
+      };
+
+      // we will fetch the data when this FourthComponent is rendered
+      // using the useEffect hook to fetch the data
+      useEffect(
+        // this is the callback handler
+        () => {
+          const fetchData = async () => {
+            // fetch data from external API
+            const response = await fetch("https://reqres.in/api/users");
+            const jsonData = await response.json();
+
+            // set fetched data to state
+            setExtData(jsonData.data.slice(3, 6));
+          };
+
+          // we will fetch the data from the external API
+          // using the methods that we have created
+          // the fetchExternalData method
+          fetchData();
+
+          // this is the same as componentDidMount
+
+          // this is the same as componentDidUnmount
+          return () => {};
+        },
+        // we will need an empty array here
+        // to avoid infinite loop
+        []
+      );
+
+      return (
+        <div>
+          <h2 className="h2">Fourth Component</h2>
+          <FourthComponentSubInput
+            selectedExtData={selectedExtData}
+          ></FourthComponentSubInput>
+          {/* pass the setSelectedEmail function here */}
+          <FourthComponentSubTable
+            extData={extData}
+            setSelectedEmail={setSelectedEmail}
+          ></FourthComponentSubTable>
+        </div>
+      );
+    }
+
+    export default FourthComponent;
+    ```
+1. edit `FourthComponentSubInput.jsx`
+    ```jsx
+    function FourthComponentSubInput({ selectedExtData }) {
+      return (
+        <div>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Choose from below"
+            value={selectedExtData}
+            disabled
+          />
+        </div>
+      );
+    }
+
+    export default FourthComponentSubInput;
+    ```
+1. edit `FourthComponentSubTable.jsx`
+    ```jsx
+    import FourthComponentSubTableContent from "./FourthComponentSubTableContent";
+
+    function FourthComponentSubTable({ extData, setSelectedEmail }) {
+      return (
+        <table className="table-auto">
+          <thead>
+            <tr>
+              <th>first_name</th>
+              <th>last_name</th>
+              <th>email</th>
+              <th>avatar</th>
+              <th>action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Create the loop for rendering the data */}
+            {extData.map((item) => (
+              // Loop the table rows and pass the item
+              // and pass the setSelectedEmail function from props
+              <FourthComponentSubTableContent
+                key={item.id}
+                item={item}
+                setSelectedEmail={setSelectedEmail}
+              />
+            ))}
+          </tbody>
+        </table>
+      );
+    }
+
+    export default FourthComponentSubTable;
+    ```
+1. edit `FourthComponentSubTableContent.jsx`
+    ```jsx
+    function FourthComponentSubTableContent({ item, setSelectedEmail }) {
+      return (
+        <tr>
+          <td>{item.first_name}</td>
+          <td>{item.last_name}</td>
+          <td>{item.email}</td>
+          <td>
+            <img src={item.avatar}></img>
+          </td>
+          <td>
+            <button className="btn" onClick={() => setSelectedEmail(item.email)}>
+              Choose Me pl0x
+            </button>
+          </td>
+        </tr>
+      );
+    }
+
+    export default FourthComponentSubTableContent;
     ```

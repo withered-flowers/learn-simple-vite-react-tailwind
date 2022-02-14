@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import FirstComponent from "./components/FirstComponent";
 import SecondComponent from "./components/SecondComponent";
 import ThirdComponent from "./components/ThirdComponent";
+import FourthComponent from "./components/FourthComponent";
 
 function App() {
   // declare hooks to use the navigate
@@ -30,16 +31,21 @@ function App() {
           <nav>
             {/* Delclare the link in here (href) */}
             {/* navigate -1 to go back 1 page before */}
-            <a href="#" className="link" onClick={() => navigate(-1)}>
+            {/* navigate / to go to / (or using link) */}
+            <a href="#" className="link" onClick={() => navigate("/")}>
               Back
             </a>
             <Link to="/third-component" className="link">
               Third Component
             </Link>
+            <Link to="/fourth-component" className="link">
+              Fourth Component
+            </Link>
           </nav>
           {/* Declare the routes here */}
           <Routes>
             <Route path="/third-component" element={<ThirdComponent />} />
+            <Route path="/fourth-component" element={<FourthComponent />} />
           </Routes>
         </section>
       </div>
